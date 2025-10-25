@@ -1,4 +1,3 @@
-app.js
 document.addEventListener('DOMContentLoaded', () => {
     const tempInput = document.getElementById('temperature');
     const suggestButton = document.getElementById('suggest-button');
