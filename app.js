@@ -1,5 +1,8 @@
 document.addEventListener('DOMContentLoaded', () => {
     const tempInput = document.getElementById('temperature');
+    // --- 変更点A: 骨格選択要素を取得
+    const skeletonSelect = document.getElementById('skeleton-type');
+    // ------------------------------------
     const suggestButton = document.getElementById('suggest-button');
     const resultArea = document.getElementById('result-area');
     const recommendationText = document.getElementById('recommendation-text');
@@ -7,16 +10,29 @@ document.addEventListener('DOMContentLoaded', () => {
 
     suggestButton.addEventListener('click', () => {
         const temp = parseInt(tempInput.value);
+        // --- 変更点B: 骨格タイプを取得
+        const skeletonType = skeletonSelect.value;
+        // ------------------------------------
 
-        // 入力値のバリデーション
+        // 入力値のバリデーション（骨格タイプの選択も追加）
         if (isNaN(temp) || temp === "") {
             recommendationText.innerHTML = "有効な気温（数字）を入力してください。";
             trendDetails.innerHTML = "";
             resultArea.classList.remove('hidden');
             return;
         }
-
-        const { recommendation, trendItem } = getCoordination(temp);
+        // --- 変更点C: 骨格タイプのバリデーション
+        if (skeletonType === "none") {
+             recommendationText.innerHTML = "骨格タイプを選択してください。";
+             trendDetails.innerHTML = "";
+             resultArea.classList.remove('hidden');
+             return;
+        }
+        // ------------------------------------
+        
+        // --- 変更点D: 骨格タイプを関数に渡す
+        const { recommendation, trendItem } = getCoordination(temp, skeletonType);
+        // ------------------------------------
 
         // 結果を表示
         recommendationText.innerHTML = recommendation;
@@ -25,75 +41,75 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     /**
-     * 気温に基づいてコーディネートとトレンドアイテムを提案するロジック
+     * 気温と骨格に基づいてコーディネートとトレンドアイテムを提案するロジック
      * @param {number} temp - ユーザーが入力した最高気温（℃）
+     * @param {string} skeletonType - 骨格タイプ ('straight', 'wave', 'natural')
      * @returns {object} 提案テキストとトレンドアイテムHTML
      */
-    function getCoordination(temp) {
-        let recommendation = "";
-        let trendItem = "";
+    // --- 変更点E: 関数の定義に skeletonType を追加
+    function getCoordination(temp, skeletonType) {
+    // ------------------------------------
+        
+        // 骨格タイプごとの基本スタイル定義
+        const skeletonAdvice = {
+            straight: "【骨格ストレート】ハリ感のある素材、Iラインシルエット、シンプルでベーシックなデザインで着痩せ効果を狙いましょう。",
+            wave: "【骨格ウェーブ】柔らかい素材、AラインやXラインシルエット、ハイウエストで重心を上げ、華奢な上半身をカバーしましょう。",
+            natural: "【骨格ナチュラル】ざっくりした素材、オーバーサイズ、Yラインシルエットでフレームを活かし、カジュアルに着こなしましょう。"
+        };
 
+        // 提案ロジックの本体 (具体的な提案内容を skeletonType で分岐させます)
+        let recommendation = "";
+        let specificItem = ""; // 骨格別アイテム
+        let tempAdvice = "";   // 気温別アドバイス
+
+        // --- 気温別の基本アドバイス ---
         if (temp >= 30) {
-            // 猛暑日（30℃以上）
-            recommendation = "🥵 **猛暑日**です。涼しさと体力の消耗を防ぐことが最優先です。清涼感のある素材を選びましょう。";
-            trendItem = `
-                <ul>
-                    <li>**着こなし:** **ノースリーブ**やTシャツに、冷房対策として**シアー素材**のシャツを羽織る。</li>
-                    <li>**トレンド:** リラックス感のある**ワイドスラックス**や、**カットアウトトップス**を取り入れて。</li>
-                    <li>**素材:** リネン、コットン、吸水速乾素材</li>
-                </ul>
-            `;
+            tempAdvice = "🥵 猛暑日です。涼しさと体力の消耗を防ぐことが最優先です。";
+            if (skeletonType === 'straight') specificItem = "ハリ感のある**コットンシャツ**（ジャストサイズ）と**ベーシックなワイドスラックス**。";
+            else if (skeletonType === 'wave') specificItem = "柔らかい素材の**ノースリーブブラウス**に、**シアーなハイウエストスカート**。";
+            else if (skeletonType === 'natural') specificItem = "風通しの良い**リネン・麻のオーバーサイズシャツ**に、丈の長い**ワイドパンツ**。";
+        
         } else if (temp >= 25) {
-            // 夏日/初秋（25℃〜29℃）
-            recommendation = "☀️ **夏日**です。日中は半袖で快適ですが、朝晩の冷えや紫外線対策に薄手の羽織りを忘れずに。";
-            trendItem = `
-                <ul>
-                    <li>**着こなし:** **半袖トップス**に、薄手の**カーディガン**や**シアーシャツ**を肩掛け。</li>
-                    <li>**トレンド:** **ショート丈アウター**や、秋のトレンドカラー（**ブラウン、レッド**）を取り入れたトップス。</li>
-                    <li>**素材:** 薄手のコットン、レーヨン、リネンブレンド</li>
-                </ul>
-            `;
+            tempAdvice = "☀️ 夏日です。日中は半袖で快適ですが、朝晩の冷え対策に薄手の羽織りを忘れずに。";
+            if (skeletonType === 'straight') specificItem = "**ショート丈ジャケット**とセンタープレスパンツでIラインを意識。";
+            else if (skeletonType === 'wave') specificItem = "**柔らかい素材のカーディガン**を肩掛けし、**フレアスカート**でAラインに。";
+            else if (skeletonType === 'natural') specificItem = "ざっくりした**オーバーサイズのスウェット**を主役に、**デニムやカーゴパンツ**でカジュアルに。";
+        
         } else if (temp >= 20) {
-            // 快適な気候（20℃〜24℃）
-            recommendation = "🌤️ **快適な気候**です。長袖一枚で過ごしやすい季節。朝晩の気温差に注意して。";
-            trendItem = `
-                <ul>
-                    <li>**着こなし:** 薄手の**ニット**や**長袖Tシャツ**（ロンT）が主役。軽めの**ジャケット**やパーカーを準備。</li>
-                    <li>**トレンド:** **テーラードジャケット**や、**チェック柄**のシャツ。足元はクラシカルな**ローファー**が旬。</li>
-                    <li>**素材:** コットン、薄手のウール、スウェット</li>
-                </ul>
-            `;
+            tempAdvice = "🌤️ 快適な気候です。長袖一枚で過ごしやすい季節。アウターを脱ぎ着して温度調整を。";
+            if (skeletonType === 'straight') specificItem = "**ベーシックなニット**に、**ハリのあるトレンチコート**を羽織る。";
+            else if (skeletonType === 'wave') specificItem = "**フリルやギャザー**の入ったブラウスに、**ショート丈のジャケット**を羽織る。";
+            else if (skeletonType === 'natural') specificItem = "**ロング丈のシャツ**に**ニットベスト**を重ね、**コーデュロイパンツ**で素材感を出す。";
+        
         } else if (temp >= 15) {
-            // やや寒い（15℃〜19℃）
-            recommendation = "🍂 **肌寒い季節**です。いよいよアウターの出番。着脱しやすい重ね着（レイヤード）を意識しましょう。";
-            trendItem = `
-                <ul>
-                    <li>**着こなし:** **ニット**や**スウェット**に、**トレンチコート**や**ブルゾン**を羽織る。</li>
-                    <li>**トレンド:** **レザージャケット**やキルティングコート。ボトムスは暖かみのある**コーデュロイ**や**ワイドスラックス**。</li>
-                    <li>**素材:** 厚手のコットン、薄手のウール、フリース</li>
-                </ul>
-            `;
+            tempAdvice = "🍂 肌寒い季節です。アウターが必須。重ね着（レイヤード）を楽しみましょう。";
+            if (skeletonType === 'straight') specificItem = "目が詰まった**ハイゲージニット**に、レザーやウールなど**厚みのあるジャケット**。";
+            else if (skeletonType === 'wave') specificItem = "薄手の**タートルネック**に、**ショート丈のダウン**や**ツイードジャケット**。";
+            else if (skeletonType === 'natural') specificItem = "ざっくりした**ローゲージニット**に、**オーバーサイズのマウンテンパーカー**。";
+
         } else if (temp >= 10) {
-            // 寒い（10℃〜14℃）
-            recommendation = "🧣 **寒い**です。本格的な防寒対策が必要です。保温性の高いアウターを選びましょう。";
-            trendItem = `
-                <ul>
-                    <li>**着こなし:** 厚手の**ニット**に、**ウールコート**や**ダウンベスト**を重ねる。首元は**マフラー**で防寒。</li>
-                    <li>**トレンド:** ふわふわの**シャギー素材**のニット。ボトムスはロング丈の**ペンシルスカート**や厚手パンツ。</li>
-                    <li>**素材:** ウール、カシミヤ、裏起毛スウェット</li>
-                </ul>
-            `;
+            tempAdvice = "🧣 寒いです。本格的な防寒対策が必要です。保温性の高いアウターを選びましょう。";
+            if (skeletonType === 'straight') specificItem = "高品質な**ウールコート**（チェスターコートなど）と**Vネックニット**。";
+            else if (skeletonType === 'wave') specificItem = "**ファーやシャギー素材**のコートに、**ハイウエストのロングスカート**。";
+            else if (skeletonType === 'natural') specificItem = "**ダウンジャケット**は**ロング丈のオーバーサイズ**を選び、**ワイドパンツ**と合わせる。";
+
         } else {
-            // 真冬日（10℃未満）
-            recommendation = "🥶 **真冬日**です。防寒を最優先！厚手のダウンやロングコートで全身を暖かく包みましょう。";
-            trendItem = `
-                <ul>
-                    <li>**着こなし:** **発熱インナー**を着用し、厚手の**ニット**、その上に**ロングダウンコート**を。防風素材を選ぶと◎。</li>
-                    <li>**トレンド:** シックな**グレー**や、差し色の**レッド**を取り入れて重くなりがちな冬コーデにアクセントを。</li>
-                    <li>**素材:** ダウン、ボア、裏起毛、高機能保温素材</li>
-                </ul>
-            `;
+            tempAdvice = "🥶 真冬日です。防寒を最優先！重ね着と、首・手首・足首の防寒を。";
+            if (skeletonType === 'straight') specificItem = "着ぶくれしないよう**着丈が長すぎないダウン**を**ジャストサイズ**で。";
+            else if (skeletonType === 'wave') specificItem = "ボアやシャギーなど**装飾性のある素材**のアウター。足元は**ロングブーツ**。";
+            else if (skeletonType === 'natural') specificItem = "**ムートンやコーデュロイ**など、**天然素材の重厚感**があるアイテムでYラインを強調。";
         }
+        
+        // 最終的な提案を構成
+        recommendation = `${tempAdvice}<br>👉 **${skeletonAdvice[skeletonType]}**`;
+        
+        trendItem = `
+            <ul>
+                <li>${specificItem}</li>
+                <li>**トレンドカラー:** 今季は**ブラウン**や**レッド**を小物で取り入れましょう。</li>
+                <li>**トレンドアイテム:** **ワイドスラックス**、**ショート丈アウター**、**チェック柄**。</li>
+            </ul>
+        `;
 
         return { recommendation, trendItem };
     }
