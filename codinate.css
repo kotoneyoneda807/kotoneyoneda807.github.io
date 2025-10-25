@@ -1,0 +1,113 @@
+style.css
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f4f7f6;
+    margin: 0;
+    padding: 20px;
+    color: #333;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    min-height: 100vh;
+}
+
+.container {
+    background-color: #ffffff;
+    padding: 40px;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 500px;
+}
+
+h1 {
+    text-align: center;
+    color: #5C7AEA;
+    margin-bottom: 30px;
+    font-size: 1.8em;
+}
+
+label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+}
+
+input[type="number"] {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 20px;
+    box-sizing: border-box;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    font-size: 1em;
+    transition: border-color 0.3s;
+}
+
+input[type="number"]:focus {
+    border-color: #5C7AEA;
+    outline: none;
+}
+
+button {
+    display: block;
+    width: 100%;
+    padding: 12px;
+    background-color: #5C7AEA;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1.1em;
+    font-weight: 600;
+    transition: background-color 0.3s;
+}
+
+button:hover {
+    background-color: #4A63D3;
+}
+
+#result-area {
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 1px solid #eee;
+}
+
+#result-area.hidden {
+    display: none;
+}
+
+h2 {
+    color: #333;
+    font-size: 1.5em;
+    border-left: 5px solid #5C7AEA;
+    padding-left: 10px;
+    margin-top: 0;
+}
+
+#recommendation-text {
+    font-size: 1.1em;
+    line-height: 1.6;
+    margin-bottom: 20px;
+    color: #1a1a1a;
+}
+
+#trend-details ul {
+    list-style: none;
+    padding: 0;
+    margin: 15px 0 0 0;
+}
+
+#trend-details li {
+    background-color: #eef2ff;
+    padding: 10px 15px;
+    margin-bottom: 8px;
+    border-radius: 6px;
+    font-size: 0.95em;
+    border-left: 5px solid #849bfd;
+}
+
+#trend-details strong {
+    color: #4A63D3;
+    font-weight: 700;
+}
