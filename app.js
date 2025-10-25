@@ -1,44 +1,42 @@
 document.addEventListener('DOMContentLoaded', () => {
+    // 【修正点1】すべての要素のIDがHTMLと完全に一致しているか確認
     const tempInput = document.getElementById('temperature');
-    // --- 変更点A: 骨格選択要素を取得
     const skeletonSelect = document.getElementById('skeleton-type');
-    // ------------------------------------
-    const suggestButton = document.getElementById('suggest-button');
+    const suggestButton = document.getElementById('suggest-button'); // 👈 ボタンのIDを確実に取得
     const resultArea = document.getElementById('result-area');
     const recommendationText = document.getElementById('recommendation-text');
     const trendDetails = document.getElementById('trend-details');
 
-    suggestButton.addEventListener('click', () => {
-        const temp = parseInt(tempInput.value);
-        // --- 変更点B: 骨格タイプを取得
-        const skeletonType = skeletonSelect.value;
-        // ------------------------------------
-
-        // 入力値のバリデーション（骨格タイプの選択も追加）
-        if (isNaN(temp) || temp === "") {
-            recommendationText.innerHTML = "有効な気温（数字）を入力してください。";
-            trendDetails.innerHTML = "";
+    // 【修正点2】ボタンにクリックイベントを確実に設定
+    // これが正しく動けば、ボタンが押せない問題は解決します
+    if (suggestButton) {
+        suggestButton.addEventListener('click', () => {
+            const temp = parseInt(tempInput.value);
+            const skeletonType = skeletonSelect.value;
+    
+            // 入力値のバリデーション（骨格タイプの選択も含む）
+            if (isNaN(temp) || temp === "") {
+                recommendationText.innerHTML = "有効な気温（数字）を入力してください。";
+                trendDetails.innerHTML = "";
+                resultArea.classList.remove('hidden');
+                return;
+            }
+            if (skeletonType === "none") {
+                 recommendationText.innerHTML = "骨格タイプを選択してください。";
+                 trendDetails.innerHTML = "";
+                 resultArea.classList.remove('hidden');
+                 return;
+            }
+            
+            const { recommendation, trendItem } = getCoordination(temp, skeletonType);
+    
+            // 結果を表示
+            recommendationText.innerHTML = recommendation;
+            trendDetails.innerHTML = trendItem;
             resultArea.classList.remove('hidden');
-            return;
-        }
-        // --- 変更点C: 骨格タイプのバリデーション
-        if (skeletonType === "none") {
-             recommendationText.innerHTML = "骨格タイプを選択してください。";
-             trendDetails.innerHTML = "";
-             resultArea.classList.remove('hidden');
-             return;
-        }
-        // ------------------------------------
-        
-        // --- 変更点D: 骨格タイプを関数に渡す
-        const { recommendation, trendItem } = getCoordination(temp, skeletonType);
-        // ------------------------------------
+        });
+    }
 
-        // 結果を表示
-        recommendationText.innerHTML = recommendation;
-        trendDetails.innerHTML = trendItem;
-        resultArea.classList.remove('hidden');
-    });
 
     /**
      * 気温と骨格に基づいてコーディネートとトレンドアイテムを提案するロジック
@@ -46,9 +44,7 @@ document.addEventListener('DOMContentLoaded', () => {
      * @param {string} skeletonType - 骨格タイプ ('straight', 'wave', 'natural')
      * @returns {object} 提案テキストとトレンドアイテムHTML
      */
-    // --- 変更点E: 関数の定義に skeletonType を追加
     function getCoordination(temp, skeletonType) {
-    // ------------------------------------
         
         // 骨格タイプごとの基本スタイル定義
         const skeletonAdvice = {
