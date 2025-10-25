@@ -16,7 +16,19 @@
             <input type="number" id="temperature" placeholder="例: 18" min="-20" max="45">
             
             <button id="suggest-button">コーディネートを提案してもらう</button>
+            <label for="skeleton-type">あなたの骨格タイプ：</label>
+        <select id="skeleton-type">
+            <option value="none">選択してください</option>
+            <option value="straight">ストレート</option>
+            <option value="wave">ウェーブ</option>
+            <option value="natural">ナチュラル</option>
+        </select>
+        <label for="temperature">今日の予想最高気温を入力してください（℃）：</label>
+        <input type="number" id="temperature" placeholder="例: 18" min="-20" max="45">
+        
+        <button id="suggest-button">コーディネートを提案してもらう</button>
         </div>
+        
 
         <div id="result-area" class="hidden">
             <h2>提案結果</h2>
