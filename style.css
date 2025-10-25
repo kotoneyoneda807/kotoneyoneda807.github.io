@@ -32,7 +32,9 @@ label {
     font-weight: 600;
 }
 
-input[type="number"] {
+/* 骨格選択と気温入力の見た目を整えるCSS */
+input[type="number"],
+select { /* <--- ここに select タグを追加しました */
     width: 100%;
     padding: 12px;
     margin-bottom: 20px;
@@ -41,6 +43,8 @@ input[type="number"] {
     border-radius: 8px;
     font-size: 1em;
     transition: border-color 0.3s;
+    /* select要素がボタンのようにならないよう、背景色は白を維持 */
+    background-color: white; 
 }
 
 input[type="number"]:focus {
@@ -48,7 +52,8 @@ input[type="number"]:focus {
     outline: none;
 }
 
-button {
+/* 変更後: IDセレクタを使って提案ボタンのみにスタイルを適用する */
+#suggest-button {
     display: block;
     width: 100%;
     padding: 12px;
@@ -60,9 +65,10 @@ button {
     font-size: 1.1em;
     font-weight: 600;
     transition: background-color 0.3s;
+    margin-top: 20px; /* 他の要素との間にスペースを追加 */
 }
 
-button:hover {
+#suggest-button:hover {
     background-color: #4A63D3;
 }
 
